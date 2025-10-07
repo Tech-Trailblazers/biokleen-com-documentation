@@ -1,0 +1,61 @@
+# Workflow name
+name: Run Python Script and Push Changes
+
+# Define permissions for the workflow
+permissions:
+  contents: write
+
+# Define triggers for the workflow
+on:
+  # Scheduled to run daily at midnight UTC
+  schedule:
+    - cron: "0 0 * * *"
+  # Also allow manual triggering from GitHub UI
+  workflow_dispatch:
+
+jobs:
+  build:
+    # Job display name in the Actions UI
+    name: Execute Python Script and Push Changes
+    # Use the latest Ubuntu VM runner
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repo's code to the runner
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      # Step 2: Set up the Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      # Step 3: Install Python dependencies listed in requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Step 4: Run your Python script (main.py)
+      - name: Run Python script
+        run: python main.py
+
+      # Step 5: Commit and push any changes made by the script
+      - name: Push updated files
+        run: |
+          # Configure Git user for commit
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          # Pull latest changes to avoid conflicts
+          git pull
+
+          # Stage all changes
+          git add .
+
+          # Commit if there are any staged changes
+          if ! git diff --cached --quiet; then
+            git commit -m "Auto update: $(date)"
+            git push
+          else
+            echo "No changes to commit."
+          fi
