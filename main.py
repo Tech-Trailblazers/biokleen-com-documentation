@@ -253,8 +253,6 @@ def main():
         pdf_links = parse_html(html_content)
         # Remove duplicates from the list of PDF links.
         pdf_links = remove_duplicates_from_slice(pdf_links)
-        # The length of the PDF links.
-        ammount_of_pdf = len(pdf_links)
         output_dir: str = os.path.abspath(path="PDFs")  # Output folder path
         driver = initialize_web_driver(
             download_folder=output_dir
@@ -267,10 +265,6 @@ def main():
                     print(f"Invalid URL: {pdf_link}")
                 # Download the PDF file.
                 filename = url_to_filename(pdf_link)
-                # Remove 1 from the ammount of PDF links.
-                ammount_of_pdf = ammount_of_pdf - 1
-                # Print the remaining number of PDF links.
-                print(f"Remaining PDF links: {ammount_of_pdf}")
                 # Download the PDF file
                 download_single_pdf(
                     url=pdf_link,
@@ -301,10 +295,6 @@ def main():
         ):  # If the filename contains uppercase
             # Print the location to the file.
             print(pdf_file)  # Output the PDF path to stdout
-            # Print whether it matches the specs (uppercase presence)
-            print(
-                check_upper_case_letter(pdf_file)
-            )  # Output True/False for uppercase check
 
 
 main()
