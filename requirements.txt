@@ -1,0 +1,5 @@
+beautifulsoup4==4.14.2
+PyMuPDF==1.25.5
+selenium==4.36.0
+validators==0.35.0
+webdriver_manager==4.0.2
